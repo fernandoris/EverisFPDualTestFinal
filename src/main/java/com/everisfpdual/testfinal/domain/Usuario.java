@@ -18,5 +18,19 @@ public class Usuario implements Serializable{
 	//Enunciado: Desarrolla la entidad para obtener los datos de BBDD
 	
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int id;
 	
+	@Column(name="email")
+	private String email;
+	
+	@Column(name="firstname")
+	private String firstname;
+	
+	@Column(name="lastname")
+	private String lastname;
+	
+	@Column(name="password")
+	private String password;
 }
