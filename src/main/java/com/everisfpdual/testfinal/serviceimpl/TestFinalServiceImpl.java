@@ -4,8 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.query.Query;
 /*
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -39,6 +43,13 @@ public class TestFinalServiceImpl implements TestFinalService{
 		//Enunciado: Obtener lista de Usuarios e implementar la llamada al metodo para obtener el excel
 		List<Usuario> usuarios = new ArrayList<>();
 		ByteArrayInputStream inputStreamResource = null;
+		
+		Connection con = null;
+		String host = "localhost:8081/h2-console/";
+		
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://localhost:8081/h2-console");
+		}
 		
 		return inputStreamResource;
 	}
