@@ -2,10 +2,15 @@ package com.everisfpdual.testfinal.serviceimpl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /*
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -34,12 +39,38 @@ public class TestFinalServiceImpl implements TestFinalService{
 	@Autowired
 	UsuarioRepository usuarioRepository;
 	
-	public ByteArrayInputStream getExcel() {
+	public ByteArrayInputStream getExcel() throws IOException {
 		
 		//Enunciado: Obtener lista de Usuarios e implementar la llamada al metodo para obtener el excel
-		List<Usuario> usuarios = new ArrayList<>();
-		ByteArrayInputStream inputStreamResource = null;
+		String[] columns = {""
+				+ "Id","Email","Firstname","Lastname","Password"};
 		
+		Workbook workbook = new XSSFWorkbook();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+		Sheet sheet = workbook.createSheet(Constant.USUARIOS_SHEET);
+		Row row = sheet.createRow(0);
+        
+        for (int i = 0; i < columns.length; i++) {
+			Cell cell = row.createCell(i);
+			cell.setCellValue(columns[i]);
+		}
+		
+		List<Usuario> usuarios = new ArrayList<>();
+		int fila = 1;
+		for (Usuario usuario : usuarios) {
+			row = sheet.createRow(fila);
+			row.createCell(0).setCellValue(usuario.getId());
+			row.createCell(1).setCellValue(usuario.getEmail());
+			row.createCell(2).setCellValue(usuario.getFirstname());
+			row.createCell(3).setCellValue(usuario.getLastname());
+			row.createCell(4).setCellValue(usuario.getPassword());
+			fila++;
+		}
+		
+		workbook.write(baos);
+		workbook.close();
+		ByteArrayInputStream inputStreamResource = null;
 		return inputStreamResource;
 	}
 	
