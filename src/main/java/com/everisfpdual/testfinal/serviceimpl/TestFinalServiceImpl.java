@@ -1,12 +1,10 @@
 package com.everisfpdual.testfinal.serviceimpl;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +12,11 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.aspectj.util.FileUtil;
 /*
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -37,7 +37,6 @@ import com.everisfpdual.testfinal.domain.Usuario;
 import com.everisfpdual.testfinal.repository.UsuarioRepository;
 import com.everisfpdual.testfinal.service.TestFinalService;
 import com.everisfpdual.testfinal.util.Constant;
-import com.opencsv.CSVReader;
 
 @Service
 public class TestFinalServiceImpl implements TestFinalService{
@@ -50,41 +49,22 @@ public class TestFinalServiceImpl implements TestFinalService{
 		//Enunciado: Obtener lista de Usuarios e implementar la llamada al metodo para obtener el excel
 		List<Usuario> usuarios = new ArrayList<>();
 		ByteArrayInputStream inputStreamResource = null;
+		usuarios = usuarioRepository.findAll();
 		
-		final String[] columnas = {"Id","Correo","Nombre","Apellido","Contraseña"};
-		
-		Connection con = null;
-		String host = "localhost:8081";
-		String user = "root";
-		String pass = "root";
-		String dtbs = "jdbc:h2:mem:test";
-		String newConnectionURL = "jdbc:mysql://" + host + "/" + dtbs
-		                    + "?" + "user=" + user + "&password=" + pass;
-		try {
-			FileOutputStream fos = new FileOutputStream("");
-			Class.forName("com.mysql.jdbc.Driver");
-			con = (java.sql.Connection) DriverManager.getConnection(newConnectionURL);
-			ps = con.prepareStatement("SELECT * FROM USERS");
-			ResultSet rs = ps.exe
-			
-			
-		} catch (SQLException e) {
-			System.out.println("Error en la conexión:");
-			e.printStackTrace();
-		}		
+		final String[] columnas = {"Id","Correo","Nombre","Apellido","Contraseña"};		
 		
 		//Generar la excel con los datos de los usuarios 
 		
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet hoja = workbook.createSheet();		
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet hoja = workbook.createSheet(Constant.USUARIOS_SHEET);
 		
 		for (int i = 0; i < (usuarios.size() + 1); i++) {
 			
-			HSSFRow fila = hoja.createRow(i);
+			XSSFRow fila = hoja.createRow(i);
 			
 			for (int j = 0; j < columnas.length; j++) {
 				
-				HSSFCell celda = fila.createCell(j);
+				XSSFCell celda = fila.createCell(j);
 				
 				if(i == 0) {
 					
@@ -109,6 +89,19 @@ public class TestFinalServiceImpl implements TestFinalService{
 				
 			}
 			
+		}
+		
+		try {
+			File file = new File("excelGenerado.xlsx");
+			FileOutputStream fos = new FileOutputStream(file);
+			workbook.write(fos);
+			fos.close();
+			workbook.close();
+			inputStreamResource = new ByteArrayInputStream(FileUtil.readAsByteArray(file));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		
 		return inputStreamResource;
