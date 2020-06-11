@@ -112,7 +112,7 @@ public class TestFinalServiceImpl implements TestFinalService{
 			List<Usuario> usuarios = new ArrayList<Usuario>();
 			//Mientras exista siguiente linea, guardaremos el usuario que hay en esa linea en la lista
             while ((nextRecord = reader.readNext()) != null) {
-            	usuarios.add(new Usuario(0,nextRecord[0],nextRecord[1],nextRecord[2],nextRecord[3]));
+            	usuarios.add(new Usuario(nextRecord[0],nextRecord[1],nextRecord[2],nextRecord[3]));
             }
             //Guardamos los usuarios en nuestra base de datos
 			usuarioRepository.saveAll(usuarios);
