@@ -2,6 +2,7 @@ package com.everisfpdual.testfinal.serviceimpl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ import com.everisfpdual.testfinal.domain.Usuario;
 import com.everisfpdual.testfinal.repository.UsuarioRepository;
 import com.everisfpdual.testfinal.service.TestFinalService;
 import com.everisfpdual.testfinal.util.Constant;
+import com.opencsv.CSVReader;
 //import com.opencsv.CSVReader;
 
 @Service
@@ -42,8 +44,7 @@ public class TestFinalServiceImpl implements TestFinalService{
 	public ByteArrayInputStream getExcel() throws IOException {
 		
 		//Enunciado: Obtener lista de Usuarios e implementar la llamada al metodo para obtener el excel
-		String[] columns = {""
-				+ "Id","Email","Firstname","Lastname","Password"};
+		String[] columns = {"Id","Email","Firstime","Lastname","Password"};
 		
 		Workbook workbook = new XSSFWorkbook();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -57,6 +58,7 @@ public class TestFinalServiceImpl implements TestFinalService{
 		}
 		
 		List<Usuario> usuarios = new ArrayList<>();
+		usuarios = usuarioRepository.findAll();
 		int fila = 1;
 		for (Usuario usuario : usuarios) {
 			row = sheet.createRow(fila);
@@ -71,6 +73,7 @@ public class TestFinalServiceImpl implements TestFinalService{
 		workbook.write(baos);
 		workbook.close();
 		ByteArrayInputStream inputStreamResource = null;
+		inputStreamResource = new ByteArrayInputStream(baos.toByteArray());
 		return inputStreamResource;
 	}
 	

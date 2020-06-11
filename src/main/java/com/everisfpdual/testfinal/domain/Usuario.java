@@ -23,22 +23,22 @@ public class Usuario implements Serializable{
 	private int id;
 	
 	@Column(name="email")
-	private int email;
+	private String email;
 	
 	@Column(name="firstname")
-	private int firstname;
+	private String firstname;
 	
 	@Column(name="lastname")
-	private int lastname;
+	private String lastname;
 	
 	@Column(name="password")
-	private int password;
+	private String password;
 	
 	Usuario(){
 		
 	}
 
-	Usuario(int id, int email, int firstname, int lastname, int password) {
+	Usuario(int id, String email, String firstname, String lastname, String password) {
 		this.id = id;
 		this.email = email;
 		this.firstname = firstname;
@@ -54,37 +54,40 @@ public class Usuario implements Serializable{
 		this.id = id;
 	}
 
-	public int getEmail() {
+	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(int email) {
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	public int getFirstname() {
+	public String getFirstname() {
 		return firstname;
 	}
 
-	public void setFirstname(int firstname) {
+	public void setFirstname(String firstname) {
 		this.firstname = firstname;
 	}
 
-	public int getLastname() {
+	public String getLastname() {
 		return lastname;
 	}
 
-	public void setLastname(int lastname) {
+	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
 
-	public int getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(int password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 	
 }
