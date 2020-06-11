@@ -50,9 +50,25 @@ public class TestFinalServiceImpl implements TestFinalService{
 		
 		//Enunciado: Obtener lista de Usuarios e implementar la llamada al metodo para obtener el excel
 		List<Usuario> usuarios = new ArrayList<>();
+		
+		SessionFactory sessionFactory;
+
+        Configuration configuration = new Configuration();
+        configuration.configure();
+        ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
+        sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        
+        Session session=sessionFactory.openSession();
+        session.beginTransaction();
+		
+        usuarios.add((Usuario) session.get("usuario", "*"));
+        
+        session.close();
+        
 		String[] columnas = {"id"+"correo"+"nombre"+"apellidos"+"contraseña"};
 		
-		ByteArrayInputStream inputStreamResource = new ByteArrayInputStream();
+		ByteArrayInputStream inputStreamResource = null;
+		
 		
 		HSSFWorkbook libro = new HSSFWorkbook();
 		HSSFSheet hoja = libro.createSheet("alumnos");
@@ -142,6 +158,23 @@ public class TestFinalServiceImpl implements TestFinalService{
 			}
 
 			reader.close();
+			
+			SessionFactory sessionFactory;
+
+	        Configuration configuration = new Configuration();
+	        configuration.configure();
+	        ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
+	        sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+	        
+	        Session session=sessionFactory.openSession();
+	        session.beginTransaction();
+			
+	        for (int j = 0; j < usuarios.size(); j++) {
+		        session.saveOrUpdate(usuarios.get(j));
+
+			}
+	        
+	        session.close();
 		} catch (Exception e) {
 			result = false;
 		}		
