@@ -28,12 +28,23 @@ import com.everisfpdual.testfinal.service.TestFinalService;
 import com.everisfpdual.testfinal.util.Constant;
 import com.opencsv.CSVReader;
 
+/**
+ * Class that implements getExcel and addUsersToDbFromCsvFile methods.
+ * 
+ * @author Ana Blanco Escudero
+ * @version 1.2
+ * @since 1.0
+ */
 @Service
 public class TestFinalServiceImpl implements TestFinalService {
 
 	@Autowired
 	UsuarioRepository usuarioRepository;
 
+	/**
+	 * Method that reads values from users table in database and writes the users
+	 * list into a XLSX file.
+	 */
 	public ByteArrayInputStream getExcel() {
 
 		// Enunciado: Obtener lista de Usuarios e implementar la llamada al metodo para
@@ -101,6 +112,12 @@ public class TestFinalServiceImpl implements TestFinalService {
 		return inputStreamResource;
 	}
 
+	/**
+	 * Method that reads users values from a CSV file and inserts them on database
+	 * users table.
+	 * 
+	 * @param fileName name of the CSV file where the users info is stored.
+	 */
 	@Override
 	public boolean addUsersToDbFromCsvFile(String fileName) {
 		boolean result = true;
@@ -114,7 +131,7 @@ public class TestFinalServiceImpl implements TestFinalService {
 			List<String[]> csvRows = reader.readAll();
 
 			List<Usuario> usuarios = new ArrayList<>();
-			
+
 			// Read users list from List and store on ArrayList:
 			for (String[] row : csvRows) {
 				Usuario usuario = new Usuario();

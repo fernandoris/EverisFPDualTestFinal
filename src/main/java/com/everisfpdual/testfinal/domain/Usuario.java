@@ -13,7 +13,8 @@ import javax.persistence.Table;
  * ORM object for users database table.
  * 
  * @author Ana Blanco Escudero
- * @since 10-06-2020
+ * @version 1.3
+ * @since 1.0
  */
 @Entity
 @Table(name = "users")
@@ -67,10 +68,10 @@ public class Usuario implements Serializable {
 	/**
 	 * Constructs a new user with his email, complete name and password.
 	 * 
-	 * @param email
-	 * @param firstname
-	 * @param lastname
-	 * @param password
+	 * @param email     value for the user email
+	 * @param firstname value for the user firstname
+	 * @param lastname  value for the user lastname
+	 * @param password  value for the user pastword
 	 */
 	public Usuario(String email, String firstname, String lastname, String password) {
 		this.email = email;
