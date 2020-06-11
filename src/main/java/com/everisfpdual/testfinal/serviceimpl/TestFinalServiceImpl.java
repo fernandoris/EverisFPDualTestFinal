@@ -106,8 +106,16 @@ public class TestFinalServiceImpl implements TestFinalService{
 		//Enunciado: Leer archivo csv para obtener los datos de los Usuarios 
 		//y guardarlos en BBDD
 		try {
-			//CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
-			
+			CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
+			String[] nextRecord;
+			//Creamos la lista donde guardaremos los usuarios
+			List<Usuario> usuarios = new ArrayList<Usuario>();
+			//Mientras exista siguiente linea, guardaremos el usuario que hay en esa linea en la lista
+            while ((nextRecord = reader.readNext()) != null) {
+            	usuarios.add(new Usuario(0,nextRecord[0],nextRecord[1],nextRecord[2],nextRecord[3]));
+            }
+            //Guardamos los usuarios en nuestra base de datos
+			usuarioRepository.saveAll(usuarios);
 		} catch (Exception e) {
 			result = false;
 		}		
