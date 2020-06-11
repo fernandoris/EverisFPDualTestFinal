@@ -1,15 +1,16 @@
 package com.everisfpdual.testfinal.serviceimpl;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.query.Query;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.aspectj.util.FileUtil;
 /*
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -30,6 +31,7 @@ import com.everisfpdual.testfinal.domain.Usuario;
 import com.everisfpdual.testfinal.repository.UsuarioRepository;
 import com.everisfpdual.testfinal.service.TestFinalService;
 import com.everisfpdual.testfinal.util.Constant;
+import com.opencsv.CSVReader;
 //import com.opencsv.CSVReader;
 
 @Service
@@ -44,12 +46,51 @@ public class TestFinalServiceImpl implements TestFinalService{
 		List<Usuario> usuarios = new ArrayList<>();
 		ByteArrayInputStream inputStreamResource = null;
 		
-		Connection con = null;
-		String host = "localhost:8081/h2-console/";
+		usuarios = usuarioRepository.findAll();
 		
+		final String[] columnas = {"ID", "EMAIL", "FIRSTNAME", "LASTNAME", "PASSWORD"};
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:8081/h2-console");
+			Workbook wb = new XSSFWorkbook();
+			
+			Sheet sheet = wb.createSheet("Usuarios");
+			
+			Font headerFont = wb.createFont();
+			headerFont.setBold(true);
+			
+			CellStyle headerCellStyle = wb.createCellStyle();
+			headerCellStyle.setFont(headerFont);
+			
+			Row headerRow = sheet.createRow(0);
+			
+			for (int i = 0; i < columnas.length; i++) {
+				Cell cell = headerRow.createCell(i);
+				cell.setCellValue(columnas[i]);
+				cell.setCellStyle(headerCellStyle);
+			}
+			
+			int num = 1;
+			for (Usuario usuario : usuarios) {
+				Row row = sheet.createRow(num++);
+				row.createCell(0).setCellValue(usuario.getId());
+				row.createCell(1).setCellValue(usuario.getEmail());
+				row.createCell(2).setCellValue(usuario.getFirstName());
+				row.createCell(3).setCellValue(usuario.getLastName());
+				row.createCell(4).setCellValue(usuario.getPassword());
+			}
+			
+			for (int i = 0; i < columnas.length; i++) {
+				sheet.autoSizeColumn(i);
+			}
+			File f = new File("usuarios.xlsx");
+			FileOutputStream fos = new FileOutputStream(f);
+			wb.write(fos);
+			fos.close();
+			wb.close();
+			inputStreamResource = new ByteArrayInputStream(FileUtil.readAsByteArray(f));
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
 		}
+		
 		
 		return inputStreamResource;
 	}
@@ -62,11 +103,15 @@ public class TestFinalServiceImpl implements TestFinalService{
 		//Enunciado: Leer archivo csv para obtener los datos de los Usuarios 
 		//y guardarlos en BBDD
 		try {
-			//CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
-			
+			CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
+			while(reader.readNext() != null) {
+				String[] s = reader.readNext();
+				Usuario u = new Usuario(s[0],s[1],s[2],s[3]);
+				usuarioRepository.save(u);
+			}
 		} catch (Exception e) {
 			result = false;
-		}		
+		}
 		
 		return result;
 	}
