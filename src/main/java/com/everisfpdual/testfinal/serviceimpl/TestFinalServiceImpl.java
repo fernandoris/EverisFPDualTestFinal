@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -26,15 +25,24 @@ import com.everisfpdual.testfinal.domain.Usuario;
 import com.everisfpdual.testfinal.repository.UsuarioRepository;
 import com.everisfpdual.testfinal.service.TestFinalService;
 import com.everisfpdual.testfinal.util.Constant;
-//import com.opencsv.CSVReader;
+import com.opencsv.CSVReader;
 
+/**
+ * Clase que implementa los métodos para cargar y descargar los datos de la BBDD
+ * 
+ * @author Luca
+ * @version 1.1
+ * @since 1.0
+ */
 @Service
-public class TestFinalServiceImpl implements TestFinalService{
+public class TestFinalServiceImpl implements TestFinalService {
 
 	@Autowired
 	UsuarioRepository usuarioRepository;
-	
-	
+
+	/**
+	 * Método que permite descargar un archivo excel con los datos de la BBDD
+	 */
 	public ByteArrayInputStream getExcel() {
 
 		// Enunciado: Obtener lista de Usuarios e implementar la llamada al metodo para
@@ -81,7 +89,7 @@ public class TestFinalServiceImpl implements TestFinalService{
 			row.createCell(3).setCellValue(usuarios.get(i).getPassword());
 		}
 
-		// Escritura 
+		// Escritura
 		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 		ByteArrayInputStream inputStreamResource = null;
 		try {
@@ -102,25 +110,50 @@ public class TestFinalServiceImpl implements TestFinalService{
 			e.printStackTrace();
 			System.err.println("Fallo al cerrar");
 		}
-		
+
 		return inputStreamResource;
 	}
-	
-	
+
+	/**
+	 * Método que lee un archivo csv e introduce sus datos en la BBDD
+	 */
 	@Override
 	public boolean addUsersToDbFromCsvFile(String fileName) {
 		boolean result = true;
 		Resource resource = new ClassPathResource(fileName.concat(Constant.CSV_EXT));
-		
-		//Enunciado: Leer archivo csv para obtener los datos de los Usuarios 
-		//y guardarlos en BBDD
+
+		// Enunciado: Leer archivo csv para obtener los datos de los Usuarios
+		// y guardarlos en BBDD
 		try {
-			//CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
-			
+			CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
+
+			// Leer todas las líneas y almacenarlas en lista:
+			List<String[]> data = reader.readAll();
+
+			List<Usuario> usuarios = new ArrayList<>();
+			// Bucle que recorre la lista y añade cada una de las posiciones del array a un
+			// objeto usuario.
+			for (String[] array : data) {
+				Usuario user = new Usuario();
+				user.setEmail(array[0]);
+				user.setFirstname(array[1]);
+				user.setLastname(array[2]);
+				user.setPassword(array[3]);
+
+				// Se añade el objeto al ArrayList
+				usuarios.add(user);
+			}
+
+			// Se añade a la BBDD el ArrayList con los usuarios cargados
+			usuarioRepository.saveAll(usuarios);
+
+			// Se cierra el CSVReader
+			reader.close();
+
 		} catch (Exception e) {
 			result = false;
-		}		
-		
+		}
+
 		return result;
 	}
 
