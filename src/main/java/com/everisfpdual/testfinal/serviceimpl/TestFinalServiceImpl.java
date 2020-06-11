@@ -1,8 +1,8 @@
 package com.everisfpdual.testfinal.serviceimpl;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,24 +11,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -39,6 +32,8 @@ import com.everisfpdual.testfinal.repository.UsuarioRepository;
 import com.everisfpdual.testfinal.service.TestFinalService;
 import com.everisfpdual.testfinal.util.Constant;
 import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 
 @Service
 public class TestFinalServiceImpl implements TestFinalService {
@@ -137,20 +132,62 @@ public class TestFinalServiceImpl implements TestFinalService {
 				e.printStackTrace();
 			}
 			
+			try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return inputStreamResource;
+			
 	}
 
 	@Override
 	public boolean addUsersToDbFromCsvFile(String fileName) {
 		boolean result = true;
 		Resource resource = new ClassPathResource(fileName.concat(Constant.CSV_EXT));
+		
+		PreparedStatement ps;
+		Connection con = null;
 
+		try {
+			con = DriverManager.getConnection(
+			"jdbc:h2:mem:test","root","root");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
 		// Enunciado: Leer archivo csv para obtener los datos de los Usuarios
 		// y guardarlos en BBDD
+		
 		try {
-			// CSVReader reader = new CSVReader(new
-			// FileReader(resource.getFile().getPath()));
-
+			CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
+			String[] siguiente;
+			String query = "INSERT INTO users (email,firstname,lastname,password) VALUES (?,?,?,?)";
+			ps = con.prepareStatement(query);
+			
+			while((siguiente = reader.readNext()) != null) {
+				String email = siguiente[0];
+				//System.out.println(email);
+				String fs = siguiente[1];
+				//System.out.println(fs);
+				String ls = siguiente[2];
+				//System.out.println(ls);
+				String psw = siguiente[3];
+				//System.out.println(psw);
+				
+				ps.setString(1, email);	ps.setString(2, fs); 
+				ps.setString(3, ls);	ps.setString(4, psw);
+				
+				ps.addBatch();
+			}
+			
+				ps.executeBatch();
+				con.close();
+				
 		} catch (Exception e) {
 			result = false;
 		}
