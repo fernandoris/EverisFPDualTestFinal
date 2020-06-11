@@ -104,10 +104,11 @@ public class TestFinalServiceImpl implements TestFinalService{
 		//y guardarlos en BBDD
 		try {
 			CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
-			while(reader.readNext() != null) {
-				String[] s = reader.readNext();
+			String[] s = reader.readNext();
+			while(s != null) {
 				Usuario u = new Usuario(s[0],s[1],s[2],s[3]);
 				usuarioRepository.save(u);
+				s = reader.readNext();
 			}
 		} catch (Exception e) {
 			result = false;
