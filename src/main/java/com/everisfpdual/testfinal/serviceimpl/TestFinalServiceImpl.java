@@ -41,6 +41,7 @@ public class TestFinalServiceImpl implements TestFinalService{
 			//Enunciado: Obtener lista de Usuarios e implementar la llamada al metodo para obtener el excel
 			String[] columns = {"id","email", "firstname", "lastname", "password"};
 
+			@SuppressWarnings("resource")
 			Workbook workbook = new XSSFWorkbook();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -85,9 +86,15 @@ public class TestFinalServiceImpl implements TestFinalService{
 		//y guardarlos en BBDD
 		try {
 			CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
-			
-		} catch (Exception e){result = false;}		
-		
+			String[] lineas = reader.readNext();
+			while(lineas != null) {
+				Usuario users = new Usuario(0, lineas[1],lineas[2],lineas[3],lineas[4]);
+				usuarioRepository.save(users);
+				lineas = reader.readNext();
+			}
+		} catch (Exception e) {
+			result = false;
+		}
 		return result;
 	}
 }
