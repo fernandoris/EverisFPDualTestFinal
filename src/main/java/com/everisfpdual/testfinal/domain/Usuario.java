@@ -42,10 +42,8 @@ public class Usuario implements Serializable{
     public Usuario() { 
     }
 
-	public Usuario(int id, @NotNull String email, @NotNull String firstName, @NotNull String lastName,
+	public Usuario(@NotNull String email, @NotNull String firstName, @NotNull String lastName,
 			@NotNull String password) {
-		super();
-		this.id = id;
 		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
