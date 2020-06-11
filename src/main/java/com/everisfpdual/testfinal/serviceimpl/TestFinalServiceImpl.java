@@ -28,7 +28,8 @@ import com.everisfpdual.testfinal.util.Constant;
 import com.opencsv.CSVReader;
 
 /**
- * Clase que implementa los métodos para cargar y descargar los datos de la BBDD
+ * Class that implements the methods to upload and download the data from the
+ * database
  * 
  * @author Luca
  * @version 1.1
@@ -41,7 +42,7 @@ public class TestFinalServiceImpl implements TestFinalService {
 	UsuarioRepository usuarioRepository;
 
 	/**
-	 * Método que permite descargar un archivo excel con los datos de la BBDD
+	 * Method that allows to download an excel file with the data from the database
 	 */
 	public ByteArrayInputStream getExcel() {
 
@@ -115,7 +116,7 @@ public class TestFinalServiceImpl implements TestFinalService {
 	}
 
 	/**
-	 * Método que lee un archivo csv e introduce sus datos en la BBDD
+	 * Method that reads a csv file and register its data into the database
 	 */
 	@Override
 	public boolean addUsersToDbFromCsvFile(String fileName) {
