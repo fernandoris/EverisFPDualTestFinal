@@ -24,20 +24,31 @@ public class Usuario implements Serializable{
 	private int id;
 	
 	@Column(name="email", nullable=false)
-	@Size(min=10,max=64)
+	@Size(min=0,max=64)
 	private String email;
 	
 	@Column(name="firstname", nullable=false)
-	@Size(min=10,max=64)
+	@Size(min=0,max=64)
 	private String firstname;
 	
 	@Column(name="lastname", nullable=false)
-	@Size(min=10,max=64)
+	@Size(min=0,max=64)
 	private String lastname;
 	
 	@Column(name="password", nullable=false)
-	@Size(min=10,max=64)
+	@Size(min=0,max=64)
 	private String password;
+
+	public Usuario(String email, String firstname, String lastname, String password) {
+		this.email = email;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.password = password;
+	}
+	
+	public Usuario() {
+		
+	}
 
 	public int getId() {
 		return id;
