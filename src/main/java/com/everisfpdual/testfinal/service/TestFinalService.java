@@ -5,7 +5,6 @@ import java.io.ByteArrayInputStream;
 public interface TestFinalService {
 
 	public ByteArrayInputStream getExcel();
-
 	public boolean addUsersToDbFromCsvFile(String fileName);
 	
 }
