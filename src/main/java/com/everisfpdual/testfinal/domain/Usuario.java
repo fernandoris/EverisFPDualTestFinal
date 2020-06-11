@@ -44,9 +44,7 @@ public class Usuario implements Serializable{
 
 	// Constructor sobrecargado
 	
-	public Usuario(int id, String email, String firstname, String lastname, String password) {
-		super();
-		this.id = id;
+	public Usuario(String email, String firstname, String lastname, String password) {	
 		this.email = email;
 		this.firstname = firstname;
 		this.lastname = lastname;
