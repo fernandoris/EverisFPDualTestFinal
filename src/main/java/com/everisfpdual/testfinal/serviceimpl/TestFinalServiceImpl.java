@@ -58,8 +58,11 @@ public class TestFinalServiceImpl implements TestFinalService{
 		CellStyle style = workbook.createCellStyle();
 		Font font = workbook.createFont();
 		font.setBold(true);
+		font.setFontHeightInPoints((short) 16);
 		style.setFont(font);
-		        
+		style.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+		style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		
 		// Creamos la cabecera
 		for (int i = 0; i < columns.length; i++) {
 			// Se crea una celda dentro de la fila
@@ -70,10 +73,14 @@ public class TestFinalServiceImpl implements TestFinalService{
 			cell.setCellValue(columns[i]);
 		}
 		        
-		// Recorremos la lista de alumnos y lo escribimos en una columna i
+		// Recorremos la lista de alumnos y lo escribimos en una fila i
 		int i = 1;
 		for (Usuario usuario : usuarios) {
+			// Creamos la fila i
 			row = sheet.createRow(i);
+			//Le indicamos la altura que tendrá la fila
+	        row.setHeightInPoints(33);
+	        //Creamos las celdas y le damos valor
 			cell = row.createCell(0);
 			cell.setCellValue(usuario.getId());
 			cell = row.createCell(1);
@@ -86,7 +93,12 @@ public class TestFinalServiceImpl implements TestFinalService{
 			cell.setCellValue(usuario.getPassword());
 			i++;
 		}
-		        
+		
+		// Ajustamos el tamaño de las columnas
+		for (int j = 0; j < columns.length; j++) {
+			sheet.autoSizeColumn(j);
+		}
+		
 		// Se guarda el libro.
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -95,6 +107,7 @@ public class TestFinalServiceImpl implements TestFinalService{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return inputStreamResource;
 	}
 	
@@ -110,10 +123,12 @@ public class TestFinalServiceImpl implements TestFinalService{
 			String[] nextRecord;
 			//Creamos la lista donde guardaremos los usuarios
 			List<Usuario> usuarios = new ArrayList<Usuario>();
+			
 			//Mientras exista siguiente linea, guardaremos el usuario que hay en esa linea en la lista
             while ((nextRecord = reader.readNext()) != null) {
             	usuarios.add(new Usuario(nextRecord[0],nextRecord[1],nextRecord[2],nextRecord[3]));
             }
+            
             //Guardamos los usuarios en nuestra base de datos
 			usuarioRepository.saveAll(usuarios);
 		} catch (Exception e) {
