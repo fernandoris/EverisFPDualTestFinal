@@ -33,6 +33,7 @@ import com.everisfpdual.testfinal.repository.UsuarioRepository;
 import com.everisfpdual.testfinal.service.TestFinalService;
 import com.everisfpdual.testfinal.util.Constant;
 //import com.opencsv.CSVReader;
+import com.opencsv.CSVReader;
 
 @Service
 public class TestFinalServiceImpl implements TestFinalService {
@@ -90,14 +91,24 @@ public class TestFinalServiceImpl implements TestFinalService {
 		// Enunciado: Leer archivo csv para obtener los datos de los Usuarios
 		// y guardarlos en BBDD
 		try {
-			// CSVReader reader = new CSVReader(new
-			// FileReader(resource.getFile().getPath()));
+
+			CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
+
+			String[] datos = null;
+
+			while ((datos = reader.readNext()) != null) {
+
+				Usuario usuario = new Usuario(datos[0], datos[1], datos[2], datos[3]);
+
+				usuarioRepository.save(usuario);
+
+			}
 
 		} catch (Exception e) {
 			result = false;
 		}
 
 		return result;
-	}
+	}// fin addUsers
 
 }
