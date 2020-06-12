@@ -48,6 +48,7 @@ public class TestFinalServiceImpl implements TestFinalService{
 				// Se genera hoja en el excel y se comunica
 				System.out.print("Generando hoja de trabajo...");
 				XSSFSheet sheet = workbook.createSheet("Users");
+				
 				// Ahora se va a rellenar la hoja de trabajo
 				System.out.print("Rellenando hoja de trabajo...");
 
@@ -77,48 +78,36 @@ public class TestFinalServiceImpl implements TestFinalService{
 					row.createCell(1).setCellValue(usuarios.get(i).getEmail());
 					row.createCell(2).setCellValue(usuarios.get(i).getFirstName());
 					row.createCell(3).setCellValue(usuarios.get(i).getLastName());
-					row.createCell(3).setCellValue(usuarios.get(i).getPassword());
+					row.createCell(4).setCellValue(usuarios.get(i).getPassword());
 				}
 
 				// Se ajusta el ancho de las columnas para que se vea mejor su contenido
 				for (int i = 0; i < columns.length; i++) {
 					sheet.autoSizeColumn(i);
 				}
-
 				
-		//
-//				ByteArrayOutputStream ms=new ByteArrayOutputStream();
-//				workbook.save(ms, FileFormatType.DEFAULT);
-//				byte b[] = ms.toByteArray();
-//				
-				
-				//Se pasa el excel a un array byte
+		
+				// Se prueba a pasar del excel a un array de tipo byte
 				try {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
-			        workbook.write(out);
-			        byte[] array = out.toByteArray();
-			        inputStreamResource = new ByteArrayInputStream(array);
-			    } catch (IOException e) {
-			        e.printStackTrace();
-			    }
-				
-				
+						workbook.write(out);
+					byte[] array = out.toByteArray();
+					inputStreamResource = new ByteArrayInputStream(array);
+					System.out.print("Paso de excel a array");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 
-				// Se guarda el archivo en la ruta especificada al principio de la clase
-				System.out.print("Guardando excel..");
+				// Se prueba a cerrar conexion de workbook
 				try {
-					//workbook.write(new FileOutputStream("C:\\Users\\irengelr\\Desktop\\archivo.xls"));
-					System.out.println("--->Hecho");
+				System.out.println("--->Hecho");
 					workbook.close();
-				} catch (FileNotFoundException e) {
+				}catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				
-				//ByteArrayInputStream BAIS = new ByteArrayInputStream(FileUtils.readFileToByteArray(new File(workbook.write(new FileOutputStream("archivo.xls")))));
-				
-					
 				return inputStreamResource;
 			}
 	
