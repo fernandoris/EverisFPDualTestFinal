@@ -1,12 +1,14 @@
 package com.everisfpdual.testfinal.serviceimpl;
 
+import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-/*
+
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -14,9 +16,11 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-*/
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -34,11 +38,60 @@ public class TestFinalServiceImpl implements TestFinalService{
 	@Autowired
 	UsuarioRepository usuarioRepository;
 	
+	private static final String[] columnas = {"Id", "Email","Nombre", "Apellido", "Contaseña"};
+	
 	public ByteArrayInputStream getExcel() {
 		
 		//Enunciado: Obtener lista de Usuarios e implementar la llamada al metodo para obtener el excel
 		List<Usuario> usuarios = new ArrayList<>();
 		ByteArrayInputStream inputStreamResource = null;
+		
+		usuarios = usuarioRepository.findAll();		//trae todos los datos de la base
+		
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		Sheet hoja = workbook.createSheet(Constant.USUARIOS_SHEET);
+		hoja.setDefaultColumnWidth(20);
+		
+		Row fila = hoja.createRow(0);
+		Cell celda;
+		
+		XSSFCellStyle styleTitle = workbook.createCellStyle();
+		XSSFFont font = workbook.createFont();
+		font.setFontHeight(18);
+		font.setBold(true);
+		styleTitle.setFillForegroundColor(IndexedColors.BLUE.getIndex());
+		styleTitle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		styleTitle.setFont(font);
+		
+		for (int i = 0; i < columnas.length; i++) {
+			celda = fila.createCell(i);
+			celda.setCellStyle(styleTitle);
+			celda.setCellValue(columnas[i]);
+		}
+		
+		for (int i = 0; i < usuarios.size(); i++) {
+			Row filaNueva = hoja.createRow(i + 1);
+			
+			filaNueva.createCell(0).setCellValue(usuarios.get(i).getId());
+			filaNueva.createCell(1).setCellValue(usuarios.get(i).getEmail());
+			filaNueva.createCell(2).setCellValue(usuarios.get(i).getFirstname());
+			filaNueva.createCell(3).setCellValue(usuarios.get(i).getLastname());
+			filaNueva.createCell(4).setCellValue(usuarios.get(i).getPassword());
+		}
+		
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			workbook.write(baos);											//Escribimos
+			
+			byte[] array = baos.toByteArray();
+			inputStreamResource = new ByteArrayInputStream(array);		//Pasamos el objeto al input
+			
+			workbook.close();
+			baos.close();
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
 		
 		return inputStreamResource;
 	}
