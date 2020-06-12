@@ -5,7 +5,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /*
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -26,6 +34,7 @@ import com.everisfpdual.testfinal.domain.Usuario;
 import com.everisfpdual.testfinal.repository.UsuarioRepository;
 import com.everisfpdual.testfinal.service.TestFinalService;
 import com.everisfpdual.testfinal.util.Constant;
+import com.opencsv.CSVReader;
 //import com.opencsv.CSVReader;
 
 @Service
@@ -34,12 +43,39 @@ public class TestFinalServiceImpl implements TestFinalService{
 	@Autowired
 	UsuarioRepository usuarioRepository;
 	
-	public ByteArrayInputStream getExcel() {
+	public ByteArrayInputStream getExcel() throws IOException {
 		
 		//Enunciado: Obtener lista de Usuarios e implementar la llamada al metodo para obtener el excel
-		List<Usuario> usuarios = new ArrayList<>();
-		ByteArrayInputStream inputStreamResource = null;
+		String[] columns = {"Id","Email","Firstime","Lastname","Password"};
 		
+		Workbook workbook = new XSSFWorkbook();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+		Sheet sheet = workbook.createSheet(Constant.USUARIOS_SHEET);
+		Row row = sheet.createRow(0);
+        
+        for (int i = 0; i < columns.length; i++) {
+			Cell cell = row.createCell(i);
+			cell.setCellValue(columns[i]);
+		}
+		
+		List<Usuario> usuarios = new ArrayList<>();
+		usuarios = usuarioRepository.findAll();
+		int fila = 1;
+		for (Usuario usuario : usuarios) {
+			row = sheet.createRow(fila);
+			row.createCell(0).setCellValue(usuario.getId());
+			row.createCell(1).setCellValue(usuario.getEmail());
+			row.createCell(2).setCellValue(usuario.getFirstname());
+			row.createCell(3).setCellValue(usuario.getLastname());
+			row.createCell(4).setCellValue(usuario.getPassword());
+			fila++;
+		}
+		
+		workbook.write(baos);
+		workbook.close();
+		ByteArrayInputStream inputStreamResource = null;
+		inputStreamResource = new ByteArrayInputStream(baos.toByteArray());
 		return inputStreamResource;
 	}
 	
@@ -51,8 +87,16 @@ public class TestFinalServiceImpl implements TestFinalService{
 		//Enunciado: Leer archivo csv para obtener los datos de los Usuarios 
 		//y guardarlos en BBDD
 		try {
-			//CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
-			
+			CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
+			String[]nextLine;
+            List <Usuario> usuarios = new ArrayList <Usuario>();
+
+            while((nextLine = reader.readNext()) != null) {
+                Usuario usuarioDB1 = new Usuario(nextLine[0],nextLine[1],nextLine[2],nextLine[3]);
+                usuarios.add(usuarioDB1);
+            }
+
+            usuarioRepository.saveAll(usuarios);	
 		} catch (Exception e) {
 			result = false;
 		}		
