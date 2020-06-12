@@ -17,6 +17,6 @@ public class Usuario implements Serializable{
 	
 	//Enunciado: Desarrolla la entidad para obtener los datos de BBDD
 	
-	
+	//Prueba
 	
 }
