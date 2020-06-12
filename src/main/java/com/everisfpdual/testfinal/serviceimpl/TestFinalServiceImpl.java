@@ -100,12 +100,22 @@ public class TestFinalServiceImpl implements TestFinalService{
 		}
 		
 		// Se guarda el libro.
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			workbook.write(baos);
 			inputStreamResource = new ByteArrayInputStream(baos.toByteArray());
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+		// Se cierra
+		
+		try {
+			workbook.close();
+			baos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Error al cierre.");
 		}
 		
 		return inputStreamResource;
@@ -131,6 +141,7 @@ public class TestFinalServiceImpl implements TestFinalService{
             
             //Guardamos los usuarios en nuestra base de datos
 			usuarioRepository.saveAll(usuarios);
+			reader.close();
 		} catch (Exception e) {
 			result = false;
 		}		
