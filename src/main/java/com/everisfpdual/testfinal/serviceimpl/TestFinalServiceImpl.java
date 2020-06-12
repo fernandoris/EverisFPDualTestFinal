@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -85,8 +86,11 @@ public class TestFinalServiceImpl implements TestFinalService{
 		//Enunciado: Leer archivo csv para obtener los datos de los Usuarios 
 		//y guardarlos en BBDD
 		try {
-			//CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
-			
+			CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
+			List<String[]> Lineas = reader.readAll();
+			for (String[] strings : Lineas) {
+				System.out.println(Arrays.deepToString(strings));
+			}
 		} catch (Exception e) {
 			result = false;
 		}		
