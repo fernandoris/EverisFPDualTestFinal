@@ -50,7 +50,11 @@ public class TestFinalServiceImpl implements TestFinalService{
 		
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		Sheet hoja = workbook.createSheet(Constant.USUARIOS_SHEET);
-		hoja.setDefaultColumnWidth(20);
+		hoja.setColumnWidth(0, 5*256);
+		hoja.setColumnWidth(1, 29*256);
+		hoja.setColumnWidth(2, 12*256);
+		hoja.setColumnWidth(3, 12*256);
+		hoja.setColumnWidth(4, 15*256);
 		
 		Row fila = hoja.createRow(0);
 		Cell celda;
