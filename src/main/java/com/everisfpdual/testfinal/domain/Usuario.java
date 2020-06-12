@@ -13,10 +13,6 @@ import javax.persistence.Table;
 @Table(name = "users")
 public class Usuario implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
-	
-	//Enunciado: Desarrolla la entidad para obtener los datos de BBDD
-	
-	
+
 	
 }
