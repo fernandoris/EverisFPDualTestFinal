@@ -23,7 +23,7 @@ public class Usuario implements Serializable {
 	// Enunciado: Desarrolla la entidad para obtener los datos de BBDD
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Id")
 	private int id;
 
