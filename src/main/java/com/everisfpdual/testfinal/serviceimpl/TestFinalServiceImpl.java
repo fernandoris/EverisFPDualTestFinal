@@ -2,6 +2,7 @@ package com.everisfpdual.testfinal.serviceimpl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +102,20 @@ public class TestFinalServiceImpl implements TestFinalService{
 		//Enunciado: Leer archivo csv para obtener los datos de los Usuarios 
 		//y guardarlos en BBDD
 		try {
-			//CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
+			CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
+
+			String[]linea;
+			//Creamos una lista para agregar los usuarios del csv
+			List <Usuario> usuarios = new ArrayList <Usuario>();
+			// aqui estamos guardando en una linea un array de strings
+			while((linea = reader.readNext()) != null) {
+				//con esto vamos metiendo los datos de cada usuario almacenado en el csv x linea
+				Usuario user = new Usuario(0,linea[0],linea[1],linea[2],linea[3]);
+				usuarios.add(user);
+			}
+			//con esto tenemos un repositorio de los usuarios que hemso guardado.
+			usuarioRepository.saveAll(usuarios);
+			
 		} catch (Exception e) {
 			result = false;
 		}		
