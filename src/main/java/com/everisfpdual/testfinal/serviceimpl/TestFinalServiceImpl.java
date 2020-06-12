@@ -2,7 +2,6 @@ package com.everisfpdual.testfinal.serviceimpl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,17 +13,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-/*
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-*/
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -34,8 +23,13 @@ import com.everisfpdual.testfinal.domain.Usuario;
 import com.everisfpdual.testfinal.repository.UsuarioRepository;
 import com.everisfpdual.testfinal.service.TestFinalService;
 import com.everisfpdual.testfinal.util.Constant;
-//import com.opencsv.CSVReader;
+import com.opencsv.CSVReader;
 
+/**
+ * 
+ * @author Manuel C.
+ *
+ */
 @Service
 public class TestFinalServiceImpl implements TestFinalService{
 
@@ -74,7 +68,9 @@ public class TestFinalServiceImpl implements TestFinalService{
 			cell.setCellValue(columns[i]);
 		}
 		
+		//creamos la lista de usuarios
 		List<Usuario> usuarios = new ArrayList<>();
+		//el repositorio para la busqueda de los usuarios.
 		usuarios = usuarioRepository.findAll();
 		
 		int initRow =1;
