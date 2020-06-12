@@ -9,14 +9,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
+/**
+ * 
+ * @author irengelr
+ * 
+ * Clase para la tabla User
+ *
+ */
 @Entity
 @Table(name = "users")
 public class Usuario implements Serializable{
-		
+	
 	private static final long serialVersionUID = 1L;
 	
-	//Enunciado: Desarrolla la entidad para obtener los datos de BBDD
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
@@ -34,6 +39,7 @@ public class Usuario implements Serializable{
 	@Column(name="password", nullable=false, columnDefinition = "varchar(64)")
 	private String password;
 	
+	//****Metodos constructores****
 	public Usuario() {}
 	
 	public Usuario(String email, String firstName, String lastName, String password) {
@@ -42,9 +48,11 @@ public class Usuario implements Serializable{
 		this.lastName=lastName;
 		this.password=password;
 	}
+	
+	//****Metodos de getters y setters****
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-}
+	}
 
 	public int getId() {
 		return id;
@@ -76,7 +84,7 @@ public class Usuario implements Serializable{
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
-}
+	}
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
@@ -85,5 +93,6 @@ public class Usuario implements Serializable{
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
 	
 }
