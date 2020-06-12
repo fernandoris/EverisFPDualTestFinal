@@ -1,6 +1,7 @@
 package com.everisfpdual.testfinal.controller;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -20,7 +21,7 @@ public class TestFinalController {
 	TestFinalService testFinalService;
 
 	@GetMapping(path = "/getexcel")
-    public ResponseEntity<InputStreamResource> downloadExcel(){
+    public ResponseEntity<InputStreamResource> downloadExcel() throws IOException{
 		
 		ByteArrayInputStream excel = testFinalService.getExcel();
 
@@ -29,7 +30,7 @@ public class TestFinalController {
 	}
 	
 	@GetMapping(path = "/addusersfromcsv")
-    public ResponseEntity<String> addUsers(@RequestParam(required = true) String filename){
+    public ResponseEntity<String> addUsers(@RequestParam(required = true) String filename) throws IOException{
 		String msg;
 		HttpStatus status;
 		if(testFinalService.addUsersToDbFromCsvFile(filename)) {
