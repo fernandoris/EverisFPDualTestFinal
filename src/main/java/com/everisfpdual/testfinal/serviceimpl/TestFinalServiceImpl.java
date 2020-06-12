@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -87,10 +88,15 @@ public class TestFinalServiceImpl implements TestFinalService{
 		//y guardarlos en BBDD
 		try {
 			CSVReader reader = new CSVReader(new FileReader(resource.getFile().getPath()));
-			List<String[]> Lineas = reader.readAll();
-			for (String[] strings : Lineas) {
-				System.out.println(Arrays.deepToString(strings));
-			}
+			String[]nextLine;
+            List <Usuario> usuarios = new ArrayList <Usuario>();
+
+            while((nextLine = reader.readNext()) != null) {
+                Usuario usuarioDB1 = new Usuario(nextLine[0],nextLine[1],nextLine[2],nextLine[3]);
+                usuarios.add(usuarioDB1);
+            }
+
+            usuarioRepository.saveAll(usuarios);	
 		} catch (Exception e) {
 			result = false;
 		}		

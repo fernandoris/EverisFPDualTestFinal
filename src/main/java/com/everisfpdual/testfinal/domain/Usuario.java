@@ -18,7 +18,7 @@ public class Usuario implements Serializable{
 	//Enunciado: Desarrolla la entidad para obtener los datos de BBDD
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
 	
@@ -38,8 +38,7 @@ public class Usuario implements Serializable{
 		
 	}
 
-	Usuario(int id, String email, String firstname, String lastname, String password) {
-		this.id = id;
+	public Usuario(String email, String firstname, String lastname, String password) {
 		this.email = email;
 		this.firstname = firstname;
 		this.lastname = lastname;
