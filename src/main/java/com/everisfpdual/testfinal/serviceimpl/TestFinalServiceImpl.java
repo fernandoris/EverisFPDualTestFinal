@@ -1,6 +1,7 @@
 package com.everisfpdual.testfinal.serviceimpl;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.aspectj.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -32,8 +33,6 @@ import com.everisfpdual.testfinal.repository.UsuarioRepository;
 import com.everisfpdual.testfinal.service.TestFinalService;
 import com.everisfpdual.testfinal.util.Constant;
 import com.opencsv.CSVReader;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 
 @Service
 public class TestFinalServiceImpl implements TestFinalService {
@@ -121,12 +120,16 @@ public class TestFinalServiceImpl implements TestFinalService {
 			ByteArrayInputStream inputStreamResource = null;
 			FileOutputStream fos;
 			try {
-				fos = new FileOutputStream("C:\\Users\\fgarcmac\\Desktop\\lista-final-alumnos.xls");
+				File excel = new File("usuarios.xls");
+				//fos = new FileOutputStream("C:\\Users\\fgarcmac\\Desktop\\lista-final-alumnos.xls");
 				//IOUtils.copy(inputStreamResource, new FileOutputStream("C:\\Users\\fgarcmac\\Desktop\\lista-final-alumnos.xls"));
-				 System.out.println("Escribiendo...");
-				 System.out.println("fin");
+				//System.out.println("Escribiendo...");
+				//System.out.println("fin");
+				fos = new FileOutputStream(excel);
 				 workbook.write(fos);
+				 fos.close();
 				 workbook.close();
+				 inputStreamResource = new ByteArrayInputStream(FileUtil.readAsByteArray(excel));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
